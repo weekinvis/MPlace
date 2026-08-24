@@ -1,0 +1,103 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<%
+  function corBadgeEstado(estado) {
+    const mapa = { aguardando_confirmacao: 'secondary', confirmado: 'info', em_preparacao: 'warning', enviado: 'primary', entregue: 'success', cancelado: 'danger' };
+    return mapa[estado] || 'secondary';
+  }
+  const indiceAtual = ORDEM_ESTADOS.indexOf(pedido.estado);
+  const proximoEstado = (pedido.estado !== 'entregue' && pedido.estado !== 'cancelado' && indiceAtual >= 0 && indiceAtual < ORDEM_ESTADOS.length - 1)
+    ? ORDEM_ESTADOS[indiceAtual + 1]
+    : null;
+  const podeAvancar = !!proximoEstado;
+  const podeCancelar = pedido.estado !== 'entregue' && pedido.estado !== 'cancelado';
+%>
+
+<div class="container py-4" id="pagina-pedido-vendedor" data-pedido-id="<%= pedido.id %>" data-estado-atual="<%= pedido.estado %>">
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div>
+      <h1 class="h4 fw-bold mb-1">Pedido <%= pedido.numeroPedido %></h1>
+      <span class="text-muted small">Cliente: <%= pedido.cliente.nome %> · <%= pedido.cliente.email %></span>
+    </div>
+    <span class="badge bg-<%= corBadgeEstado(pedido.estado) %> fs-6 px-3 py-2" id="badge-estado-pedido-vendedor"><%= ROTULOS_ESTADO[pedido.estado] %></span>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card mb-3">
+        <div class="card-header bg-white fw-semibold">Itens deste pedido</div>
+        <div class="card-body p-0">
+          <% pedido.itens.forEach(function(item) { %>
+            <div class="row g-0 align-items-center p-3 border-bottom">
+              <div class="col-2 col-md-1">
+                <img src="<%= item.imagemProduto || '/images/produtos/default.svg' %>" class="img-fluid rounded" alt="">
+              </div>
+              <div class="col-7 col-md-8 ps-3 small">
+                <%= item.nomeProduto %>
+                <div class="text-muted">Qtd: <%= item.quantidade %> × R$ <%= Number(item.precoUnitario).toFixed(2).replace('.', ',') %></div>
+              </div>
+              <div class="col-3 text-end fw-semibold small">R$ <%= Number(item.subtotal).toFixed(2).replace('.', ',') %></div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h2 class="h6 fw-bold mb-3">Histórico</h2>
+          <ul class="timeline-pedido list-unstyled" id="timeline-pedido-vendedor">
+            <% pedido.historico.forEach(function(h) { %>
+              <li>
+                <strong><%= ROTULOS_ESTADO[h.estadoNovo] || h.estadoNovo %></strong>
+                <span class="text-muted small d-block"><%= new Date(h.createdAt).toLocaleString('pt-BR') %></span>
+              </li>
+            <% }); %>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h2 class="h6 fw-bold mb-2"><i class="bi bi-geo-alt"></i> Endereço de entrega</h2>
+          <p class="small text-muted mb-0">
+            <%= pedido.endereco.logradouro %>, <%= pedido.endereco.numero %><br>
+            <%= pedido.endereco.bairro %> - <%= pedido.endereco.cidade %>/<%= pedido.endereco.estado %><br>
+            CEP: <%= pedido.endereco.cep %>
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h2 class="h6 fw-bold mb-3">Gerenciar status</h2>
+
+          <% if (podeAvancar) { %>
+            <button type="button" class="btn btn-bazari-primary w-100 mb-2 js-avancar-status" data-novo-estado="<%= proximoEstado %>">
+              <i class="bi bi-arrow-right-circle"></i> Avançar para "<%= ROTULOS_ESTADO[proximoEstado] %>"
+            </button>
+          <% } else { %>
+            <p class="small text-muted">Este pedido não pode mais ser avançado.</p>
+          <% } %>
+
+          <% if (podeCancelar) { %>
+            <button type="button" class="btn btn-outline-danger w-100 js-avancar-status" data-novo-estado="cancelado">
+              <i class="bi bi-x-circle"></i> Cancelar pedido
+            </button>
+          <% } %>
+
+          <div id="mensagem-status-vendedor" class="small mt-2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+<script src="/js/pedido.js"></script>
+</body>
+</html>
