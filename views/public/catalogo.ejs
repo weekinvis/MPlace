@@ -1,0 +1,64 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<div class="container py-4">
+  <h1 class="h3 fw-bold mb-4"><i class="bi bi-grid"></i> Catálogo</h1>
+
+  <div class="row">
+    <!-- Filtros -->
+    <div class="col-lg-3 mb-4">
+      <form id="form-filtros" class="filtros-catalogo">
+        <input type="hidden" name="q" value="<%= filtros.q || '' %>">
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold small">Categoria</label>
+          <select name="categoria" class="form-select form-select-sm js-filtro">
+            <option value="">Todas as categorias</option>
+            <% categorias.forEach(function(cat) { %>
+              <option value="<%= cat.id %>" <%= String(filtros.categoria) === String(cat.id) ? 'selected' : '' %>>
+                <%= cat.nome %>
+              </option>
+            <% }); %>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold small">Faixa de preço (R$)</label>
+          <div class="d-flex gap-2">
+            <input type="number" min="0" step="0.01" name="precoMin" class="form-control form-control-sm js-filtro" placeholder="Mín." value="<%= filtros.precoMin || '' %>">
+            <input type="number" min="0" step="0.01" name="precoMax" class="form-control form-control-sm js-filtro" placeholder="Máx." value="<%= filtros.precoMax || '' %>">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold small">Ordenar por</label>
+          <select name="ordenar" class="form-select form-select-sm js-filtro">
+            <option value="recentes" <%= (!filtros.ordenar || filtros.ordenar === 'recentes') ? 'selected' : '' %>>Mais recentes</option>
+            <option value="menor-preco" <%= filtros.ordenar === 'menor-preco' ? 'selected' : '' %>>Menor preço</option>
+            <option value="maior-preco" <%= filtros.ordenar === 'maior-preco' ? 'selected' : '' %>>Maior preço</option>
+            <option value="nome" <%= filtros.ordenar === 'nome' ? 'selected' : '' %>>Nome (A-Z)</option>
+          </select>
+        </div>
+
+        <button type="button" id="btn-limpar-filtros" class="btn btn-sm btn-outline-secondary w-100">
+          <i class="bi bi-x-circle"></i> Limpar filtros
+        </button>
+      </form>
+    </div>
+
+    <!-- Resultado -->
+    <div class="col-lg-9">
+      <div id="resultado-catalogo">
+        <%- include('_resultado-catalogo') %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+<script src="/js/carrinho.js"></script>
+<script src="/js/catalogo.js"></script>
+</body>
+</html>
