@@ -1,0 +1,56 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<%
+  function corBadgeEstado(estado) {
+    const mapa = { aguardando_confirmacao: 'secondary', confirmado: 'info', em_preparacao: 'warning', enviado: 'primary', entregue: 'success', cancelado: 'danger' };
+    return mapa[estado] || 'secondary';
+  }
+%>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h1 class="h3 fw-bold mb-0"><i class="bi bi-receipt-cutoff"></i> Pedidos da plataforma</h1>
+    <form method="GET" class="d-flex align-items-center gap-2">
+      <select name="estado" class="form-select form-select-sm" onchange="this.form.submit()">
+        <option value="">Todos os status</option>
+        <% Object.keys(ROTULOS_ESTADO).forEach(function(chave) { %>
+          <option value="<%= chave %>" <%= filtroEstado === chave ? 'selected' : '' %>><%= ROTULOS_ESTADO[chave] %></option>
+        <% }); %>
+      </select>
+    </form>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table bg-white align-middle">
+      <thead>
+        <tr class="small text-muted">
+          <th>Pedido</th>
+          <th>Cliente</th>
+          <th>Data</th>
+          <th>Itens</th>
+          <th>Total</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% pedidos.forEach(function(p) { %>
+          <tr>
+            <td class="small fw-semibold"><%= p.numeroPedido %></td>
+            <td class="small"><%= p.cliente.nome %></td>
+            <td class="small text-muted"><%= new Date(p.createdAt).toLocaleDateString('pt-BR') %></td>
+            <td class="small"><%= p.itens.length %></td>
+            <td class="small">R$ <%= Number(p.valorTotal).toFixed(2).replace('.', ',') %></td>
+            <td><span class="badge bg-<%= corBadgeEstado(p.estado) %>"><%= ROTULOS_ESTADO[p.estado] %></span></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+</body>
+</html>
