@@ -1,0 +1,67 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<div class="container py-4">
+  <h1 class="h3 fw-bold mb-4"><i class="bi bi-people"></i> Usuários</h1>
+
+  <form method="GET" class="row g-2 mb-4">
+    <div class="col-md-4">
+      <input type="text" name="busca" class="form-control" placeholder="Buscar por nome ou e-mail..." value="<%= busca %>">
+    </div>
+    <div class="col-md-3">
+      <select name="tipo" class="form-select">
+        <option value="">Todos os tipos</option>
+        <option value="cliente" <%= filtroTipo === 'cliente' ? 'selected' : '' %>>Cliente</option>
+        <option value="vendedor" <%= filtroTipo === 'vendedor' ? 'selected' : '' %>>Vendedor</option>
+        <option value="admin" <%= filtroTipo === 'admin' ? 'selected' : '' %>>Admin</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-outline-secondary w-100">Filtrar</button>
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table bg-white align-middle">
+      <thead>
+        <tr class="small text-muted">
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Tipo</th>
+          <th>Cadastro</th>
+          <th>Status</th>
+          <th class="text-end">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% usuarios.forEach(function(u) { %>
+          <tr data-usuario-id="<%= u.id %>">
+            <td class="small"><%= u.nome %></td>
+            <td class="small"><%= u.email %></td>
+            <td><span class="badge bg-secondary text-capitalize"><%= u.tipo %></span></td>
+            <td class="small text-muted"><%= new Date(u.createdAt).toLocaleDateString('pt-BR') %></td>
+            <td>
+              <span class="badge js-status-usuario bg-<%= u.bloqueado ? 'danger' : 'success' %>">
+                <%= u.bloqueado ? 'Bloqueado' : 'Ativo' %>
+              </span>
+            </td>
+            <td class="text-end">
+              <% if (u.tipo !== 'admin') { %>
+                <button type="button" class="btn btn-sm <%= u.bloqueado ? 'btn-outline-success' : 'btn-outline-danger' %> js-toggle-bloqueio" data-usuario-id="<%= u.id %>">
+                  <%= u.bloqueado ? 'Desbloquear' : 'Bloquear' %>
+                </button>
+              <% } %>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+<script src="/js/admin.js"></script>
+</body>
+</html>
