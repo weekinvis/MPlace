@@ -1,0 +1,81 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<section class="hero-bazari">
+  <div class="container py-5">
+    <div class="row align-items-center">
+      <div class="col-lg-7">
+        <h1 class="display-5 fw-bold mb-3">Compre e venda com quem você confia.</h1>
+        <p class="lead text-white-50 mb-4">
+          Milhares de produtos de vendedores independentes, tudo em um só lugar — com pedidos e estoque
+          acompanhados em tempo real.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          <a href="/produtos" class="btn btn-bazari-primary btn-lg">
+            <i class="bi bi-bag me-1"></i> Explorar catálogo
+          </a>
+          <% if (!usuarioLogado) { %>
+            <a href="/cadastro" class="btn btn-outline-light btn-lg">Quero vender no Bazari</a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container py-5">
+
+  <!-- Categorias -->
+  <div class="d-flex flex-wrap gap-2 justify-content-center mb-5">
+    <% categorias.forEach(function(cat) { %>
+      <a href="/produtos?categoria=<%= cat.id %>" class="chip-categoria">
+        <i class="bi <%= cat.icone || 'bi-shop' %>"></i> <%= cat.nome %>
+      </a>
+    <% }); %>
+  </div>
+
+  <!-- Destaques -->
+  <% if (produtosDestaque.length > 0) { %>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="h4 fw-bold mb-0"><i class="bi bi-stars text-warning"></i> Produtos em destaque</h2>
+      <a href="/produtos" class="small text-decoration-none">Ver tudo <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 mb-5">
+      <% produtosDestaque.forEach(function(produto) { %>
+        <%- include('../partials/produto-card', { produto }) %>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <!-- Lojas em destaque -->
+  <% if (lojasEmDestaque.length > 0) { %>
+    <h2 class="h4 fw-bold mb-3"><i class="bi bi-shop-window"></i> Lojas parceiras</h2>
+    <div class="row row-cols-2 row-cols-md-4 g-3 mb-5">
+      <% lojasEmDestaque.forEach(function(loja) { %>
+        <div class="col">
+          <a href="/vendedores/<%= loja.id %>" class="card-loja text-decoration-none">
+            <img src="<%= loja.perfilVendedor.logo %>" alt="<%= loja.perfilVendedor.nomeLoja %>" class="card-loja-logo">
+            <span class="card-loja-nome"><%= loja.perfilVendedor.nomeLoja %></span>
+          </a>
+        </div>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <!-- Recentes -->
+  <% if (produtosRecentes.length > 0) { %>
+    <h2 class="h4 fw-bold mb-3"><i class="bi bi-clock-history"></i> Chegaram agora</h2>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+      <% produtosRecentes.forEach(function(produto) { %>
+        <%- include('../partials/produto-card', { produto }) %>
+      <% }); %>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+<script src="/js/carrinho.js"></script>
+</body>
+</html>
