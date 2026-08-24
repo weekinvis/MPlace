@@ -1,0 +1,108 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<%
+  function corBadgeEstado(estado) {
+    const mapa = { aguardando_confirmacao: 'secondary', confirmado: 'info', em_preparacao: 'warning', enviado: 'primary', entregue: 'success', cancelado: 'danger' };
+    return mapa[estado] || 'secondary';
+  }
+%>
+
+<div class="container py-4">
+  <h1 class="h3 fw-bold mb-4"><i class="bi bi-shield-lock"></i> Painel administrativo</h1>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="card card-stat"><div class="card-body">
+        <span class="text-muted small">Faturamento da plataforma</span>
+        <div class="h4 fw-bold mb-0">R$ <%= faturamentoPlataforma.toFixed(2).replace('.', ',') %></div>
+      </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card card-stat"><div class="card-body">
+        <span class="text-muted small">Pedidos totais</span>
+        <div class="h4 fw-bold mb-0"><%= totalPedidos %></div>
+      </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card card-stat"><div class="card-body">
+        <span class="text-muted small">Clientes / Vendedores</span>
+        <div class="h4 fw-bold mb-0"><%= totalClientes %> <span class="fs-6 fw-normal text-muted">/ <%= totalVendedores %></span></div>
+      </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card card-stat"><div class="card-body">
+        <span class="text-muted small">Produtos cadastrados</span>
+        <div class="h4 fw-bold mb-0"><%= totalProdutos %></div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="alert alert-light border d-flex justify-content-between align-items-center mb-0">
+        <span><i class="bi bi-tags"></i> Categorias ativas</span>
+        <strong><%= totalCategorias %></strong>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <a href="/admin/avaliacoes?estado=pendente" class="alert alert-warning d-flex justify-content-between align-items-center mb-0 text-decoration-none text-dark">
+        <span><i class="bi bi-star"></i> Avaliações aguardando moderação</span>
+        <strong><%= avaliacoesPendentes %></strong>
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="/admin/usuarios" class="alert alert-light border d-flex justify-content-between align-items-center mb-0 text-decoration-none text-dark">
+        <span><i class="bi bi-person-lock"></i> Usuários bloqueados</span>
+        <strong><%= usuariosBloqueados %></strong>
+      </a>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header bg-white fw-semibold">Pedidos por status</div>
+        <div class="card-body">
+          <% if (pedidosPorEstado.length === 0) { %>
+            <p class="text-muted small mb-0">Nenhum pedido registrado ainda.</p>
+          <% } %>
+          <% pedidosPorEstado.forEach(function(p) { %>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="badge bg-<%= corBadgeEstado(p.estado) %>"><%= p.estado %></span>
+              <strong><%= p.total %></strong>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header bg-white fw-semibold d-flex justify-content-between">
+          Vendedores recentes
+          <a href="/admin/vendedores" class="small">Ver todos</a>
+        </div>
+        <div class="card-body p-0">
+          <ul class="list-group list-group-flush">
+            <% vendedoresRecentes.forEach(function(v) { %>
+              <li class="list-group-item d-flex align-items-center gap-2">
+                <img src="<%= v.perfilVendedor ? v.perfilVendedor.logo : '/images/lojas/default-logo.svg' %>" class="avatar-navbar" alt="">
+                <div>
+                  <span class="small fw-semibold d-block"><%= v.perfilVendedor ? v.perfilVendedor.nomeLoja : v.nome %></span>
+                  <span class="small text-muted"><%= v.email %></span>
+                </div>
+              </li>
+            <% }); %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+</body>
+</html>
