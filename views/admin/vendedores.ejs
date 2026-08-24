@@ -1,0 +1,36 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<div class="container py-4">
+  <h1 class="h3 fw-bold mb-4"><i class="bi bi-shop-window"></i> Vendedores</h1>
+
+  <div class="row g-3">
+    <% vendedores.forEach(function(v) { %>
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <img src="<%= v.perfilVendedor ? v.perfilVendedor.logo : '/images/lojas/default-logo.svg' %>" class="avatar-navbar" alt="">
+              <div>
+                <strong class="small d-block"><%= v.perfilVendedor ? v.perfilVendedor.nomeLoja : v.nome %></strong>
+                <span class="small text-muted"><%= v.email %></span>
+              </div>
+            </div>
+            <p class="small text-muted mb-2"><%= (v.perfilVendedor && v.perfilVendedor.descricao) || 'Sem descrição.' %></p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="badge bg-light text-dark border"><%= mapaContagem[v.id] || 0 %> produto(s)</span>
+              <a href="/vendedores/<%= v.id %>" class="small">Ver loja pública</a>
+            </div>
+            <% if (v.bloqueado) { %><span class="badge bg-danger mt-2">Bloqueado</span><% } %>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+</body>
+</html>
