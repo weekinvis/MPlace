@@ -1,0 +1,103 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<div class="container py-4">
+  <h1 class="h3 fw-bold mb-4"><i class="bi bi-speedometer2"></i> Painel da loja</h1>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="card card-stat">
+        <div class="card-body">
+          <span class="text-muted small">Faturamento total</span>
+          <div class="h4 fw-bold mb-0">R$ <%= faturamentoTotal.toFixed(2).replace('.', ',') %></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card card-stat">
+        <div class="card-body">
+          <span class="text-muted small">Pedidos recebidos</span>
+          <div class="h4 fw-bold mb-0"><%= totalPedidos %></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card card-stat">
+        <div class="card-body">
+          <span class="text-muted small">Pedidos em aberto</span>
+          <div class="h4 fw-bold mb-0"><%= pedidosPendentes %></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card card-stat">
+        <div class="card-body">
+          <span class="text-muted small">Produtos ativos</span>
+          <div class="h4 fw-bold mb-0"><%= produtosAtivos %> <span class="fs-6 text-muted fw-normal">/ <%= totalProdutos %></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <% if (produtosSemEstoque > 0) { %>
+    <div class="alert alert-warning d-flex align-items-center">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      Você tem <%= produtosSemEstoque %> produto(s) sem estoque.
+      <a href="/vendedor/produtos" class="ms-2">Gerenciar produtos</a>
+    </div>
+  <% } %>
+
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header bg-white fw-semibold">Produtos mais vendidos</div>
+        <div class="card-body p-0">
+          <% if (maisVendidos.length === 0) { %>
+            <p class="text-muted p-3 mb-0 small">Ainda não há vendas registradas.</p>
+          <% } else { %>
+            <ul class="list-group list-group-flush">
+              <% maisVendidos.forEach(function(p) { %>
+                <li class="list-group-item d-flex justify-content-between">
+                  <span class="small"><%= p.nomeProduto %></span>
+                  <span class="badge bg-bazari-primary rounded-pill"><%= p.totalVendido %> vendido(s)</span>
+                </li>
+              <% }); %>
+            </ul>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header bg-white fw-semibold d-flex justify-content-between">
+          Pedidos recentes
+          <a href="/vendedor/pedidos" class="small">Ver todos</a>
+        </div>
+        <div class="card-body p-0">
+          <% if (pedidosRecentes.length === 0) { %>
+            <p class="text-muted p-3 mb-0 small">Nenhum pedido recebido ainda.</p>
+          <% } else { %>
+            <ul class="list-group list-group-flush">
+              <% pedidosRecentes.forEach(function(pedido) { %>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <a href="/vendedor/pedidos/<%= pedido.id %>" class="small text-decoration-none"><%= pedido.numeroPedido %></a>
+                    <div class="small text-muted"><%= pedido.cliente.nome %></div>
+                  </div>
+                  <span class="small text-muted"><%= new Date(pedido.createdAt).toLocaleDateString('pt-BR') %></span>
+                </li>
+              <% }); %>
+            </ul>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+</body>
+</html>
