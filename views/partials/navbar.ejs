@@ -1,0 +1,115 @@
+<nav class="navbar navbar-expand-lg navbar-bazari sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <span class="brand-mark">🛍️</span> Bazari
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarPrincipal">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarPrincipal">
+      <form class="d-flex flex-grow-1 mx-lg-4 my-2 my-lg-0" action="/produtos" method="GET" role="search">
+        <div class="input-group">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+          <input
+            type="search"
+            name="q"
+            class="form-control border-start-0"
+            placeholder="Buscar produtos, marcas e lojas..."
+            value="<%= (typeof filtros !== 'undefined' && filtros.q) ? filtros.q : '' %>"
+          >
+        </div>
+      </form>
+
+      <ul class="navbar-nav align-items-lg-center gap-lg-2">
+        <li class="nav-item">
+          <a class="nav-link <%= caminhoAtual === '/produtos' ? 'active' : '' %>" href="/produtos">Catálogo</a>
+        </li>
+
+        <% if (!usuarioLogado) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/login">Entrar</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-bazari-primary btn-sm ms-lg-2" href="/cadastro">Criar conta</a>
+          </li>
+        <% } else { %>
+
+          <% if (usuarioLogado.tipo === 'cliente') { %>
+            <li class="nav-item">
+              <a class="nav-link position-relative" href="/carrinho" title="Carrinho">
+                <i class="bi bi-cart3 fs-5"></i>
+                <span class="badge-contador" id="badge-carrinho" data-inicial="<%= carrinhoQuantidade %>">
+                  <%= carrinhoQuantidade > 0 ? carrinhoQuantidade : '' %>
+                </span>
+              </a>
+            </li>
+          <% } %>
+
+          <% if (usuarioLogado.tipo === 'vendedor') { %>
+            <li class="nav-item">
+              <a class="nav-link <%= caminhoAtual.startsWith('/vendedor') ? 'active' : '' %>" href="/vendedor/dashboard">
+                <i class="bi bi-speedometer2 me-1"></i>Painel da loja
+              </a>
+            </li>
+          <% } %>
+
+          <% if (usuarioLogado.tipo === 'admin') { %>
+            <li class="nav-item">
+              <a class="nav-link <%= caminhoAtual.startsWith('/admin') ? 'active' : '' %>" href="/admin/dashboard">
+                <i class="bi bi-shield-lock me-1"></i>Painel admin
+              </a>
+            </li>
+          <% } %>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link position-relative" href="#" id="sinoNotificacoes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-bell fs-5"></i>
+              <span class="badge-contador" id="badge-notificacoes" data-inicial="<%= notificacoesNaoLidas %>">
+                <%= notificacoesNaoLidas > 0 ? notificacoesNaoLidas : '' %>
+              </span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end p-0 dropdown-notificacoes" aria-labelledby="sinoNotificacoes">
+              <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
+                <strong class="small">Notificações</strong>
+                <a href="/notificacoes" class="small text-decoration-none">Ver todas</a>
+              </div>
+              <div id="lista-notificacoes-dropdown">
+                <div class="text-center text-muted small py-3">Carregando...</div>
+              </div>
+            </div>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
+              <img src="<%= usuarioLogado.avatar || '/images/avatars/default.svg' %>" class="avatar-navbar" alt="">
+              <span class="d-none d-lg-inline"><%= usuarioLogado.nome.split(' ')[0] %></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <% if (usuarioLogado.tipo === 'cliente') { %>
+                <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person me-2"></i>Meu perfil</a></li>
+                <li><a class="dropdown-item" href="/pedidos"><i class="bi bi-box-seam me-2"></i>Meus pedidos</a></li>
+                <li><a class="dropdown-item" href="/enderecos"><i class="bi bi-geo-alt me-2"></i>Meus endereços</a></li>
+              <% } else if (usuarioLogado.tipo === 'vendedor') { %>
+                <li><a class="dropdown-item" href="/vendedor/perfil"><i class="bi bi-shop me-2"></i>Perfil da loja</a></li>
+                <li><a class="dropdown-item" href="/vendedor/produtos"><i class="bi bi-box-seam me-2"></i>Meus produtos</a></li>
+                <li><a class="dropdown-item" href="/vendedor/pedidos"><i class="bi bi-receipt me-2"></i>Pedidos recebidos</a></li>
+                <li><a class="dropdown-item" href="/vendedor/avaliacoes"><i class="bi bi-star me-2"></i>Avaliações</a></li>
+              <% } else if (usuarioLogado.tipo === 'admin') { %>
+                <li><a class="dropdown-item" href="/admin/usuarios"><i class="bi bi-people me-2"></i>Usuários</a></li>
+                <li><a class="dropdown-item" href="/admin/categorias"><i class="bi bi-tags me-2"></i>Categorias</a></li>
+              <% } %>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form action="/logout" method="POST">
+                  <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i>Sair</button>
+                </form>
+              </li>
+            </ul>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>

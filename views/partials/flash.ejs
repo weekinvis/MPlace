@@ -1,0 +1,21 @@
+<div class="container mt-3">
+  <% if (typeof mensagensSucesso !== 'undefined' && mensagensSucesso.length > 0) { %>
+    <% mensagensSucesso.forEach(function(msg) { %>
+      <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <div><%= msg %></div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+      </div>
+    <% }); %>
+  <% } %>
+
+  <% if (typeof mensagensErro !== 'undefined' && mensagensErro.length > 0) { %>
+    <% mensagensErro.forEach(function(msg) { %>
+      <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <div><%= msg %></div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+      </div>
+    <% }); %>
+  <% } %>
+</div>
