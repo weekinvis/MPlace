@@ -1,0 +1,452 @@
+/* ==========================================================================
+   BAZARI — design system
+   Paleta inspirada em feiras/bazares: fundo "papel", tinta índigo profunda
+   e um dourado de "etiqueta de preço" como cor de destaque — evitando o
+   combo clichê creme + terracota.
+   ========================================================================== */
+
+:root {
+  --bazari-ink: #1b1a2e;
+  --bazari-ink-soft: #322f56;
+  --bazari-gold: #e8a73e;
+  --bazari-gold-dark: #c7862a;
+  --bazari-teal: #1e6e63;
+  --bazari-paper: #faf8f5;
+  --bazari-text: #211f36;
+  --bazari-text-muted: #6b6880;
+  --bazari-border: #ebe7e0;
+
+  --bazari-font-display: 'Poppins', 'Segoe UI', sans-serif;
+  --bazari-font-body: 'Inter', 'Segoe UI', sans-serif;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--bazari-font-body);
+  background-color: var(--bazari-paper);
+  color: var(--bazari-text);
+}
+
+h1, h2, h3, h4, h5, h6,
+.navbar-brand, .card-produto-titulo, .card-loja-nome {
+  font-family: var(--bazari-font-display);
+}
+
+a {
+  color: var(--bazari-ink);
+}
+a:hover {
+  color: var(--bazari-gold-dark);
+}
+
+:focus-visible {
+  outline: 3px solid var(--bazari-gold);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Botões e cores de marca (namespaced para não brigar com o Bootstrap)
+   ========================================================================== */
+
+.btn-bazari-primary {
+  background-color: var(--bazari-gold);
+  border-color: var(--bazari-gold);
+  color: var(--bazari-ink);
+  font-weight: 600;
+}
+.btn-bazari-primary:hover,
+.btn-bazari-primary:focus {
+  background-color: var(--bazari-gold-dark);
+  border-color: var(--bazari-gold-dark);
+  color: var(--bazari-ink);
+}
+
+.bg-bazari-primary { background-color: var(--bazari-gold) !important; color: var(--bazari-ink) !important; }
+.text-bazari-primary { color: var(--bazari-gold-dark) !important; }
+.text-preco { color: var(--bazari-ink); font-family: var(--bazari-font-display); }
+
+/* ==========================================================================
+   Navbar
+   ========================================================================== */
+
+.navbar-bazari {
+  background: var(--bazari-ink);
+  padding: 0.85rem 0;
+  box-shadow: 0 2px 12px rgba(27, 26, 46, 0.15);
+}
+.navbar-bazari .navbar-brand {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+}
+.navbar-bazari .brand-mark { filter: drop-shadow(0 0 6px rgba(232, 167, 62, 0.5)); }
+.navbar-bazari .nav-link {
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 500;
+}
+.navbar-bazari .nav-link:hover,
+.navbar-bazari .nav-link.active {
+  color: var(--bazari-gold);
+}
+.navbar-bazari .navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.navbar-bazari .navbar-toggler-icon {
+  filter: invert(1);
+}
+.navbar-bazari .form-control {
+  border-radius: 8px 0 0 8px;
+}
+
+.avatar-navbar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--bazari-gold);
+}
+
+.badge-contador {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  background: var(--bazari-gold);
+  color: var(--bazari-ink);
+  font-size: 0.65rem;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+.dropdown-notificacoes {
+  width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.item-notificacao-dropdown {
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid var(--bazari-border);
+  font-size: 0.82rem;
+  text-decoration: none;
+  display: block;
+  color: var(--bazari-text);
+}
+.item-notificacao-dropdown:hover { background: var(--bazari-paper); }
+.item-notificacao-dropdown.nao-lida { background: rgba(232, 167, 62, 0.08); }
+
+.notificacao-nao-lida {
+  background: rgba(232, 167, 62, 0.08);
+  border-left: 3px solid var(--bazari-gold);
+}
+
+/* ==========================================================================
+   Hero (assinatura visual: "etiqueta" inclinada + textura de pontos)
+   ========================================================================== */
+
+.hero-bazari {
+  background: radial-gradient(circle at 15% 20%, rgba(232, 167, 62, 0.12), transparent 45%),
+              linear-gradient(135deg, var(--bazari-ink) 0%, var(--bazari-ink-soft) 100%);
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(232, 167, 62, 0.12), transparent 45%),
+    linear-gradient(135deg, var(--bazari-ink) 0%, var(--bazari-ink-soft) 100%),
+    radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: auto, auto, 22px 22px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bazari::after {
+  content: '';
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  right: -40px;
+  top: -60px;
+  border: 2px dashed rgba(232, 167, 62, 0.35);
+  border-radius: 50%;
+  transform: rotate(-12deg);
+}
+.hero-bazari h1 { font-family: var(--bazari-font-display); }
+
+/* ==========================================================================
+   Chips de categoria — pequena "etiqueta" com furo, remete a tag de preço
+   ========================================================================== */
+
+.chip-categoria {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid var(--bazari-border);
+  color: var(--bazari-text);
+  padding: 0.4rem 0.9rem 0.4rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  position: relative;
+  transition: all 0.15s ease;
+}
+.chip-categoria::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--bazari-paper);
+  border: 1px solid var(--bazari-border);
+}
+.chip-categoria:hover {
+  border-color: var(--bazari-gold);
+  color: var(--bazari-ink);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(27, 26, 46, 0.08);
+}
+
+/* ==========================================================================
+   Cards de produto
+   ========================================================================== */
+
+.card-produto {
+  border: 1px solid var(--bazari-border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.card-produto:hover {
+  box-shadow: 0 10px 24px rgba(27, 26, 46, 0.1);
+  transform: translateY(-2px);
+}
+.card-produto-imagem {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--bazari-paper);
+}
+.card-produto-imagem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.card-produto-titulo {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 0.35rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-produto-preco {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--bazari-ink);
+}
+
+.badge-canto {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-promo { background: var(--bazari-gold); color: var(--bazari-ink); }
+.badge-estoque { background: var(--bazari-ink); color: #fff; left: auto; right: 10px; }
+
+/* ==========================================================================
+   Página de produto
+   ========================================================================== */
+
+.produto-imagem-principal img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: #fff;
+  border: 1px solid var(--bazari-border);
+}
+
+.estrelas { color: var(--bazari-gold-dark); }
+.estrela-input {
+  font-size: 1.6rem;
+  color: var(--bazari-border);
+  cursor: pointer;
+  transition: color 0.1s ease;
+}
+.estrela-input.selecionada,
+.estrela-input:hover { color: var(--bazari-gold); }
+
+/* ==========================================================================
+   Lojas
+   ========================================================================== */
+
+.card-loja {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  border: 1px solid var(--bazari-border);
+  border-radius: 14px;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  transition: box-shadow 0.15s ease;
+}
+.card-loja:hover { box-shadow: 0 10px 24px rgba(27, 26, 46, 0.1); }
+.card-loja-logo { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
+.card-loja-nome { font-size: 0.85rem; font-weight: 600; color: var(--bazari-text); }
+
+.loja-banner {
+  height: 220px;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--bazari-ink);
+}
+.loja-cabecalho { margin-top: -50px; }
+.loja-logo-grande {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #fff;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(27, 26, 46, 0.2);
+}
+.loja-banner-preview {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--bazari-border);
+}
+.loja-logo-preview {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid var(--bazari-border);
+}
+
+/* ==========================================================================
+   Dashboards / estatísticas
+   ========================================================================== */
+
+.card-stat { border: 1px solid var(--bazari-border); border-radius: 12px; }
+.card-stat .h4 { font-family: var(--bazari-font-display); }
+
+/* ==========================================================================
+   Autenticação
+   ========================================================================== */
+
+.card-auth {
+  border: 1px solid var(--bazari-border);
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(27, 26, 46, 0.08);
+}
+
+/* ==========================================================================
+   Carrinho / pedidos
+   ========================================================================== */
+
+.item-carrinho { transition: opacity 0.2s ease; }
+.item-carrinho.removendo { opacity: 0; }
+
+.produto-thumb {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--bazari-border);
+}
+
+.preview-imagem-produto img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border: 1px solid var(--bazari-border);
+}
+
+.timeline-pedido {
+  border-left: 2px solid var(--bazari-border);
+  padding-left: 1.2rem;
+}
+.timeline-pedido li {
+  position: relative;
+  padding-bottom: 1.2rem;
+}
+.timeline-pedido li::before {
+  content: '';
+  position: absolute;
+  left: -1.53rem;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bazari-gold);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px var(--bazari-gold);
+}
+.timeline-pedido li:last-child { padding-bottom: 0; }
+
+/* ==========================================================================
+   Filtros do catálogo
+   ========================================================================== */
+
+.filtros-catalogo {
+  background: #fff;
+  border: 1px solid var(--bazari-border);
+  border-radius: 14px;
+  padding: 1.1rem;
+  position: sticky;
+  top: 90px;
+}
+
+/* ==========================================================================
+   Rodapé
+   ========================================================================== */
+
+.footer-bazari {
+  background: var(--bazari-ink);
+  color: rgba(255, 255, 255, 0.85);
+}
+.footer-link {
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+}
+.footer-link:hover { color: var(--bazari-gold); }
+
+/* ==========================================================================
+   Páginas de erro
+   ========================================================================== */
+
+.pagina-erro { max-width: 480px; margin: 0 auto; }
+.pagina-erro .display-1 { font-family: var(--bazari-font-display); }
+
+/* ==========================================================================
+   Responsivo
+   ========================================================================== */
+
+@media (max-width: 991.98px) {
+  .filtros-catalogo { position: static; }
+  .hero-bazari { text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

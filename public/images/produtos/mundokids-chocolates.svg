@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d37c56"/>
+      <stop offset="100%" stop-color="#9a360b"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="640" fill="url(#g)"/>
+  <circle cx="524.8" cy="115.19999999999999" r="140.8" fill="#ffffff" opacity="0.08"/>
+  <circle cx="76.8" cy="563.2" r="179.20000000000002" fill="#000000" opacity="0.08"/>
+  <text x="50%" y="274.0" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="600" fill="#ffffff" opacity="0.96">Caixa de</text>
+<text x="50%" y="320.0" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="600" fill="#ffffff" opacity="0.96">Chocolates</text>
+<text x="50%" y="366.0" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="600" fill="#ffffff" opacity="0.96">Artesanais</text>
+
+</svg>
