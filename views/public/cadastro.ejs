@@ -1,0 +1,78 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+      <div class="card card-auth">
+        <div class="card-body p-4 p-md-5">
+          <h1 class="h3 fw-bold text-center mb-1">Criar conta</h1>
+          <p class="text-muted text-center mb-4">É rápido e gratuito.</p>
+
+          <% if (erros && erros.length > 0) { %>
+            <div class="alert alert-danger">
+              <ul class="mb-0 ps-3">
+                <% erros.forEach(function(erro) { %><li><%= erro %></li><% }); %>
+              </ul>
+            </div>
+          <% } %>
+
+          <form action="/cadastro" method="POST" id="form-cadastro">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Eu quero:</label>
+              <div class="btn-group w-100" role="group">
+                <input type="radio" class="btn-check" name="tipo" id="tipo-cliente" value="cliente" autocomplete="off" <%= (!dadosAntigos.tipo || dadosAntigos.tipo === 'cliente') ? 'checked' : '' %>>
+                <label class="btn btn-outline-secondary" for="tipo-cliente"><i class="bi bi-bag-heart"></i> Comprar</label>
+
+                <input type="radio" class="btn-check" name="tipo" id="tipo-vendedor" value="vendedor" autocomplete="off" <%= dadosAntigos.tipo === 'vendedor' ? 'checked' : '' %>>
+                <label class="btn btn-outline-secondary" for="tipo-vendedor"><i class="bi bi-shop"></i> Vender</label>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="nome" class="form-label small fw-semibold">Nome completo</label>
+              <input type="text" class="form-control" id="nome" name="nome" required value="<%= dadosAntigos.nome || '' %>">
+            </div>
+
+            <div class="mb-3" id="campo-nome-loja" style="<%= dadosAntigos.tipo === 'vendedor' ? '' : 'display:none;' %>">
+              <label for="nomeLoja" class="form-label small fw-semibold">Nome da sua loja</label>
+              <input type="text" class="form-control" id="nomeLoja" name="nomeLoja" value="<%= dadosAntigos.nomeLoja || '' %>">
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label small fw-semibold">E-mail</label>
+              <input type="email" class="form-control" id="email" name="email" required value="<%= dadosAntigos.email || '' %>">
+            </div>
+
+            <div class="mb-3">
+              <label for="telefone" class="form-label small fw-semibold">Telefone</label>
+              <input type="tel" class="form-control" id="telefone" name="telefone" value="<%= dadosAntigos.telefone || '' %>">
+            </div>
+
+            <div class="row">
+              <div class="col-6 mb-3">
+                <label for="senha" class="form-label small fw-semibold">Senha</label>
+                <input type="password" class="form-control" id="senha" name="senha" minlength="6" required>
+              </div>
+              <div class="col-6 mb-3">
+                <label for="confirmarSenha" class="form-label small fw-semibold">Confirmar senha</label>
+                <input type="password" class="form-control" id="confirmarSenha" name="confirmarSenha" minlength="6" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-bazari-primary w-100 py-2 mt-2">Criar minha conta</button>
+          </form>
+
+          <p class="text-center text-muted small mt-4 mb-0">
+            Já tem conta? <a href="/login">Entrar</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+</body>
+</html>
