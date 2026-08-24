@@ -1,0 +1,95 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<div class="container py-4">
+  <h1 class="h3 fw-bold mb-4"><i class="bi bi-cart3"></i> Meu carrinho</h1>
+
+  <% if (itens.length === 0) { %>
+    <div class="text-center py-5">
+      <i class="bi bi-cart-x display-3 text-muted"></i>
+      <p class="mt-3 text-muted">Seu carrinho está vazio.</p>
+      <a href="/produtos" class="btn btn-bazari-primary">Ver catálogo</a>
+    </div>
+  <% } else { %>
+    <%
+      const porVendedor = {};
+      itens.forEach(function(item) {
+        const vId = item.produto.vendedorId;
+        if (!porVendedor[vId]) {
+          porVendedor[vId] = { nomeLoja: (item.produto.vendedor && item.produto.vendedor.perfilVendedor) ? item.produto.vendedor.perfilVendedor.nomeLoja : 'Loja', itens: [] };
+        }
+        porVendedor[vId].itens.push(item);
+      });
+    %>
+    <div class="row">
+      <div class="col-lg-8">
+        <% Object.values(porVendedor).forEach(function(grupo) { %>
+          <div class="card mb-3">
+            <div class="card-header bg-white fw-semibold small"><i class="bi bi-shop"></i> <%= grupo.nomeLoja %></div>
+            <div class="card-body p-0">
+              <% grupo.itens.forEach(function(item) { %>
+                <%
+                  const preco = Number(item.produto.precoPromocional || item.produto.preco);
+                  const subtotalItem = preco * item.quantidade;
+                %>
+                <div class="row g-0 align-items-center p-3 border-bottom item-carrinho" data-item-id="<%= item.id %>">
+                  <div class="col-2 col-md-1">
+                    <img src="<%= item.produto.imagem %>" class="img-fluid rounded" alt="<%= item.produto.nome %>">
+                  </div>
+                  <div class="col-6 col-md-5 ps-3">
+                    <a href="/produtos/<%= item.produto.id %>" class="text-decoration-none text-body small fw-semibold">
+                      <%= item.produto.nome %>
+                    </a>
+                    <div class="small text-muted">R$ <%= preco.toFixed(2).replace('.', ',') %> / un.</div>
+                  </div>
+                  <div class="col-3 col-md-3">
+                    <input
+                      type="number"
+                      class="form-control form-control-sm js-quantidade-item"
+                      data-item-id="<%= item.id %>"
+                      value="<%= item.quantidade %>"
+                      min="1"
+                      max="<%= item.produto.estoque %>"
+                    >
+                  </div>
+                  <div class="col-3 col-md-2 text-end fw-semibold small js-subtotal-item">
+                    R$ <%= subtotalItem.toFixed(2).replace('.', ',') %>
+                  </div>
+                  <div class="col-3 col-md-1 text-end">
+                    <button type="button" class="btn btn-sm btn-link text-danger js-remover-item" data-item-id="<%= item.id %>" title="Remover">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="h5 fw-bold">Resumo</h2>
+            <div class="d-flex justify-content-between my-3">
+              <span class="text-muted">Subtotal (<span id="resumo-quantidade"><%= quantidadeTotal %></span> itens)</span>
+              <strong id="resumo-subtotal">R$ <%= Number(subtotal).toFixed(2).replace('.', ',') %></strong>
+            </div>
+            <p class="small text-muted">O frete é calculado por loja na finalização da compra.</p>
+            <a href="/checkout" class="btn btn-bazari-primary w-100 py-2">
+              Finalizar compra <i class="bi bi-arrow-right"></i>
+            </a>
+            <a href="/produtos" class="btn btn-link w-100 mt-2">Continuar comprando</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+<script src="/js/carrinho.js"></script>
+</body>
+</html>
