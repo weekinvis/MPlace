@@ -1,0 +1,55 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<div class="container py-4">
+  <h1 class="h3 fw-bold mb-4"><i class="bi bi-shop"></i> Perfil da loja</h1>
+
+  <% if (erros && erros.length > 0) { %>
+    <div class="alert alert-danger">
+      <ul class="mb-0 ps-3"><% erros.forEach(function(erro) { %><li><%= erro %></li><% }); %></ul>
+    </div>
+  <% } %>
+
+  <form action="/vendedor/perfil" method="POST" enctype="multipart/form-data">
+    <div class="card mb-3">
+      <div class="card-body">
+        <label class="form-label small fw-semibold d-block">Banner da loja</label>
+        <img id="preview-banner" src="<%= perfil.banner %>" class="loja-banner-preview mb-2" alt="">
+        <input type="file" name="banner" accept="image/*" class="form-control form-control-sm js-preview-imagem" data-preview-target="#preview-banner">
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-auto">
+            <img id="preview-logo" src="<%= perfil.logo %>" class="loja-logo-preview mb-2" alt="">
+            <input type="file" name="logo" accept="image/*" class="form-control form-control-sm js-preview-imagem" data-preview-target="#preview-logo" style="max-width: 160px;">
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Nome da loja</label>
+              <input type="text" name="nomeLoja" class="form-control" required value="<%= perfil.nomeLoja %>">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Descrição</label>
+              <textarea name="descricao" class="form-control" rows="3"><%= perfil.descricao || '' %></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">CNPJ/CPF (opcional)</label>
+              <input type="text" name="documento" class="form-control" value="<%= perfil.documento || '' %>">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-bazari-primary px-4">Salvar alterações</button>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+</body>
+</html>
