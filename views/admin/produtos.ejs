@@ -1,0 +1,74 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<div class="container py-4">
+  <h1 class="h3 fw-bold mb-4"><i class="bi bi-box-seam"></i> Produtos da plataforma</h1>
+
+  <form method="GET" class="row g-2 mb-4">
+    <div class="col-md-4">
+      <input type="text" name="busca" class="form-control" placeholder="Buscar produto..." value="<%= busca %>">
+    </div>
+    <div class="col-md-3">
+      <select name="estado" class="form-select">
+        <option value="">Todos os status</option>
+        <option value="ativo" <%= filtroEstado === 'ativo' ? 'selected' : '' %>>Ativo</option>
+        <option value="inativo" <%= filtroEstado === 'inativo' ? 'selected' : '' %>>Inativo (pelo vendedor)</option>
+        <option value="bloqueado" <%= filtroEstado === 'bloqueado' ? 'selected' : '' %>>Bloqueado (pelo admin)</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-outline-secondary w-100">Filtrar</button>
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table bg-white align-middle">
+      <thead>
+        <tr class="small text-muted">
+          <th>Produto</th>
+          <th>Loja</th>
+          <th>Categoria</th>
+          <th>Preço</th>
+          <th>Status</th>
+          <th class="text-end">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% produtos.forEach(function(p) { %>
+          <tr data-produto-id="<%= p.id %>">
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <img src="<%= p.imagem %>" class="produto-thumb" alt="">
+                <a href="/produtos/<%= p.id %>" class="small text-decoration-none"><%= p.nome %></a>
+              </div>
+            </td>
+            <td class="small"><%= p.vendedor.perfilVendedor ? p.vendedor.perfilVendedor.nomeLoja : p.vendedor.nome %></td>
+            <td class="small"><%= p.categoria.nome %></td>
+            <td class="small">R$ <%= Number(p.preco).toFixed(2).replace('.', ',') %></td>
+            <td>
+              <span class="badge js-status-produto bg-<%= p.estado === 'bloqueado' ? 'danger' : (p.estado === 'ativo' ? 'success' : 'secondary') %>">
+                <%= p.estado %>
+              </span>
+            </td>
+            <td class="text-end">
+              <button
+                type="button"
+                class="btn btn-sm <%= p.estado === 'bloqueado' ? 'btn-outline-success' : 'btn-outline-danger' %> js-toggle-bloqueio-produto"
+                data-produto-id="<%= p.id %>"
+              >
+                <%= p.estado === 'bloqueado' ? 'Desbloquear' : 'Bloquear' %>
+              </button>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+<script src="/js/admin.js"></script>
+</body>
+</html>
