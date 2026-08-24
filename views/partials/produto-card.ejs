@@ -1,0 +1,51 @@
+<%
+  const temPromocao = produto.precoPromocional && Number(produto.precoPromocional) < Number(produto.preco);
+  const precoExibido = temPromocao ? produto.precoPromocional : produto.preco;
+  const esgotado = produto.estoque <= 0;
+  const nomeLoja = (produto.vendedor && produto.vendedor.perfilVendedor) ? produto.vendedor.perfilVendedor.nomeLoja : null;
+%>
+<div class="col">
+  <div class="card card-produto h-100">
+    <a href="/produtos/<%= produto.id %>" class="text-decoration-none">
+      <div class="card-produto-imagem">
+        <img src="<%= produto.imagem %>" alt="<%= produto.nome %>" loading="lazy">
+        <% if (temPromocao) { %>
+          <span class="badge-canto badge-promo">Oferta</span>
+        <% } %>
+        <span class="badge-canto badge-estoque js-badge-estoque" data-produto-id="<%= produto.id %>" style="<%= esgotado ? '' : 'display:none;' %>">
+          Esgotado
+        </span>
+      </div>
+    </a>
+    <div class="card-body d-flex flex-column">
+      <% if (nomeLoja) { %>
+        <span class="text-muted small mb-1"><i class="bi bi-shop"></i> <%= nomeLoja %></span>
+      <% } %>
+      <a href="/produtos/<%= produto.id %>" class="text-decoration-none text-body">
+        <h3 class="card-produto-titulo"><%= produto.nome %></h3>
+      </a>
+      <div class="mt-auto">
+        <% if (temPromocao) { %>
+          <div class="small text-muted text-decoration-line-through">R$ <%= Number(produto.preco).toFixed(2).replace('.', ',') %></div>
+        <% } %>
+        <div class="card-produto-preco">R$ <%= Number(precoExibido).toFixed(2).replace('.', ',') %></div>
+
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <span class="small text-muted js-estoque-texto" data-produto-id="<%= produto.id %>">
+            <%= esgotado ? 'Sem estoque' : produto.estoque + ' em estoque' %>
+          </span>
+          <% if (typeof usuarioLogado !== 'undefined' && usuarioLogado && usuarioLogado.tipo === 'cliente') { %>
+            <button
+              type="button"
+              class="btn btn-sm btn-bazari-primary js-add-carrinho"
+              data-produto-id="<%= produto.id %>"
+              <%= esgotado ? 'disabled' : '' %>
+            >
+              <i class="bi bi-cart-plus"></i>
+            </button>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
