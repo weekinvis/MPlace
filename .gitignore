@@ -1,0 +1,27 @@
+# Dependências
+node_modules/
+
+# Banco de dados SQLite local
+database/*.sqlite
+database/*.sqlite-journal
+
+# Variáveis de ambiente
+.env
+
+# Uploads de imagens enviadas em tempo de execução (mantém as imagens versionadas do seed)
+# Se quiser versionar as imagens de exemplo do seed, remova a linha abaixo.
+# public/images/produtos/upload-*
+
+# Logs
+npm-debug.log*
+logs/
+*.log
+
+# Sistema operacional / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build/cache diversos
+*.tmp
