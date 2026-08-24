@@ -1,0 +1,48 @@
+<%
+  function bzConstruirQuery(pagina) {
+    const params = new URLSearchParams();
+    if (typeof filtros !== 'undefined' && filtros) {
+      Object.keys(filtros).forEach((chave) => {
+        if (chave !== 'pagina' && filtros[chave]) params.set(chave, filtros[chave]);
+      });
+    }
+    params.set('pagina', pagina);
+    return params.toString();
+  }
+
+  const inicio = Math.max(1, paginaAtual - 2);
+  const fim = Math.min(totalPaginas, paginaAtual + 2);
+%>
+<% if (totalPaginas > 1) { %>
+<nav aria-label="Paginação de resultados">
+  <ul class="pagination justify-content-center flex-wrap">
+    <li class="page-item <%= paginaAtual <= 1 ? 'disabled' : '' %>">
+      <a class="page-link js-pagina-link" data-pagina="<%= paginaAtual - 1 %>" href="/produtos?<%= bzConstruirQuery(paginaAtual - 1) %>">
+        <i class="bi bi-chevron-left"></i>
+      </a>
+    </li>
+
+    <% if (inicio > 1) { %>
+      <li class="page-item"><a class="page-link js-pagina-link" data-pagina="1" href="/produtos?<%= bzConstruirQuery(1) %>">1</a></li>
+      <% if (inicio > 2) { %><li class="page-item disabled"><span class="page-link">…</span></li><% } %>
+    <% } %>
+
+    <% for (let p = inicio; p <= fim; p++) { %>
+      <li class="page-item <%= p === paginaAtual ? 'active' : '' %>">
+        <a class="page-link js-pagina-link" data-pagina="<%= p %>" href="/produtos?<%= bzConstruirQuery(p) %>"><%= p %></a>
+      </li>
+    <% } %>
+
+    <% if (fim < totalPaginas) { %>
+      <% if (fim < totalPaginas - 1) { %><li class="page-item disabled"><span class="page-link">…</span></li><% } %>
+      <li class="page-item"><a class="page-link js-pagina-link" data-pagina="<%= totalPaginas %>" href="/produtos?<%= bzConstruirQuery(totalPaginas) %>"><%= totalPaginas %></a></li>
+    <% } %>
+
+    <li class="page-item <%= paginaAtual >= totalPaginas ? 'disabled' : '' %>">
+      <a class="page-link js-pagina-link" data-pagina="<%= paginaAtual + 1 %>" href="/produtos?<%= bzConstruirQuery(paginaAtual + 1) %>">
+        <i class="bi bi-chevron-right"></i>
+      </a>
+    </li>
+  </ul>
+</nav>
+<% } %>
