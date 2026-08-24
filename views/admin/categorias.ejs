@@ -1,0 +1,94 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 fw-bold mb-0"><i class="bi bi-tags"></i> Categorias</h1>
+    <button type="button" class="btn btn-bazari-primary" id="btn-nova-categoria">
+      <i class="bi bi-plus-lg me-1"></i> Nova categoria
+    </button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table bg-white align-middle">
+      <thead>
+        <tr class="small text-muted">
+          <th></th>
+          <th>Nome</th>
+          <th>Descrição</th>
+          <th class="text-end">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% categorias.forEach(function(cat) { %>
+          <tr>
+            <td><i class="bi <%= cat.icone || 'bi-shop' %> fs-5"></i></td>
+            <td class="small fw-semibold"><%= cat.nome %></td>
+            <td class="small text-muted"><%= cat.descricao || '—' %></td>
+            <td class="text-end">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-secondary js-editar-categoria"
+                data-id="<%= cat.id %>"
+                data-nome="<%= cat.nome %>"
+                data-descricao="<%= cat.descricao || '' %>"
+                data-icone="<%= cat.icone || '' %>"
+              >
+                <i class="bi bi-pencil"></i>
+              </button>
+              <form action="/admin/categorias/<%= cat.id %>" method="POST" class="d-inline">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="button" class="btn btn-sm btn-outline-danger js-confirmar-exclusao" data-mensagem='Excluir a categoria "<%= cat.nome %>"?'>
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal criar/editar categoria -->
+<div class="modal fade" id="modalCategoria" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form id="form-categoria" action="/admin/categorias" method="POST">
+        <input type="hidden" name="_method" id="categoria-metodo" value="POST">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tituloModalCategoria">Nova categoria</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+            <label class="form-label small">Nome</label>
+            <input type="text" name="nome" id="categoria-nome" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Descrição</label>
+            <textarea name="descricao" id="categoria-descricao" class="form-control" rows="2"></textarea>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Ícone (classe Bootstrap Icons)</label>
+            <input type="text" name="icone" id="categoria-icone" class="form-control" placeholder="ex: bi-laptop">
+            <div class="form-text">Veja opções em <a href="https://icons.getbootstrap.com" target="_blank" rel="noopener">icons.getbootstrap.com</a></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-bazari-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/modal-confirmacao') %>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+<script src="/js/admin.js"></script>
+</body>
+</html>
