@@ -1,0 +1,151 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<div class="container py-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="/">Início</a></li>
+      <li class="breadcrumb-item"><a href="/produtos">Catálogo</a></li>
+      <li class="breadcrumb-item"><a href="/produtos?categoria=<%= produto.categoria.id %>"><%= produto.categoria.nome %></a></li>
+      <li class="breadcrumb-item active"><%= produto.nome %></li>
+    </ol>
+  </nav>
+
+  <%
+    const temPromocao = produto.precoPromocional && Number(produto.precoPromocional) < Number(produto.preco);
+    const precoExibido = temPromocao ? produto.precoPromocional : produto.preco;
+    const esgotado = produto.estoque <= 0;
+  %>
+
+  <div class="row g-4">
+    <div class="col-md-5">
+      <div class="produto-imagem-principal">
+        <img src="<%= produto.imagem %>" alt="<%= produto.nome %>" class="img-fluid rounded-4">
+      </div>
+    </div>
+
+    <div class="col-md-7">
+      <% if (produto.vendedor && produto.vendedor.perfilVendedor) { %>
+        <a href="/vendedores/<%= produto.vendedor.id %>" class="text-decoration-none small text-muted">
+          <i class="bi bi-shop"></i> <%= produto.vendedor.perfilVendedor.nomeLoja %>
+        </a>
+      <% } %>
+      <h1 class="h3 fw-bold mt-1"><%= produto.nome %></h1>
+
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <%- include('../partials/estrelas', { nota: mediaNota ? Number(mediaNota) : 0 }) %>
+        <span class="small text-muted">
+          <% if (mediaNota) { %>
+            <%= mediaNota %> (<%= totalAvaliacoes %> avaliação<%= totalAvaliacoes === 1 ? '' : 'ões' %>)
+          <% } else { %>
+            Sem avaliações ainda
+          <% } %>
+        </span>
+      </div>
+
+      <% if (temPromocao) { %>
+        <div class="text-muted text-decoration-line-through">R$ <%= Number(produto.preco).toFixed(2).replace('.', ',') %></div>
+      <% } %>
+      <div class="display-6 fw-bold text-preco mb-3">R$ <%= Number(precoExibido).toFixed(2).replace('.', ',') %></div>
+
+      <p class="text-body-secondary"><%= produto.descricao %></p>
+
+      <ul class="list-unstyled small text-muted mb-4">
+        <% if (produto.marca) { %><li><strong>Marca:</strong> <%= produto.marca %></li><% } %>
+        <% if (produto.cor) { %><li><strong>Cor:</strong> <%= produto.cor %></li><% } %>
+        <li><strong>Categoria:</strong> <%= produto.categoria.nome %></li>
+        <li id="estoque-disponivel-<%= produto.id %>">
+          <strong>Disponibilidade:</strong>
+          <span class="js-estoque-texto" data-produto-id="<%= produto.id %>">
+            <%= esgotado ? 'Sem estoque no momento' : produto.estoque + ' unidade(s) em estoque' %>
+          </span>
+        </li>
+      </ul>
+
+      <% if (typeof usuarioLogado !== 'undefined' && usuarioLogado && usuarioLogado.tipo === 'cliente') { %>
+        <div class="d-flex align-items-center gap-2">
+          <input type="number" id="quantidade-produto" class="form-control" style="width: 90px" value="1" min="1" max="<%= produto.estoque %>" <%= esgotado ? 'disabled' : '' %>>
+          <button
+            id="btn-adicionar-carrinho"
+            class="btn btn-bazari-primary btn-lg flex-grow-1 js-add-carrinho"
+            data-produto-id="<%= produto.id %>"
+            data-quantidade-input="quantidade-produto"
+            <%= esgotado ? 'disabled' : '' %>
+          >
+            <i class="bi bi-cart-plus me-1"></i> <%= esgotado ? 'Indisponível' : 'Adicionar ao carrinho' %>
+          </button>
+        </div>
+      <% } else if (!usuarioLogado) { %>
+        <a href="/login" class="btn btn-bazari-primary btn-lg"><i class="bi bi-box-arrow-in-right me-1"></i> Entre para comprar</a>
+      <% } %>
+
+      <span class="badge-canto badge-estoque js-badge-estoque-inline" data-produto-id="<%= produto.id %>" style="<%= esgotado ? '' : 'display:none;' %> position: static; display: inline-block; margin-top: 10px;">
+        Esgotado
+      </span>
+    </div>
+  </div>
+
+  <!-- Avaliações -->
+  <div class="row mt-5">
+    <div class="col-lg-8">
+      <h2 class="h4 fw-bold mb-3"><i class="bi bi-chat-square-text"></i> Avaliações de clientes</h2>
+
+      <% if (podeAvaliar) { %>
+        <div class="card mb-4 border-0 bg-light-subtle">
+          <div class="card-body">
+            <h3 class="h6 fw-semibold">Deixe sua avaliação</h3>
+            <form action="/produtos/<%= produto.id %>/avaliacoes" method="POST" id="form-avaliacao">
+              <input type="hidden" name="pedidoId" value="<%= pedidoParaAvaliar %>">
+              <input type="hidden" name="nota" id="input-nota-avaliacao" value="5">
+
+              <div class="mb-2" id="estrelas-input">
+                <% for (let i = 1; i <= 5; i++) { %>
+                  <i class="bi bi-star-fill estrela-input js-estrela-input" data-valor="<%= i %>"></i>
+                <% } %>
+              </div>
+
+              <textarea name="comentario" class="form-control mb-2" rows="3" placeholder="Conte como foi sua experiência com o produto..." required></textarea>
+              <button type="submit" class="btn btn-bazari-primary btn-sm">Enviar avaliação</button>
+            </form>
+          </div>
+        </div>
+      <% } %>
+
+      <% if (avaliacoes.length === 0) { %>
+        <p class="text-muted">Este produto ainda não tem avaliações.</p>
+      <% } %>
+
+      <% avaliacoes.forEach(function(avaliacao) { %>
+        <div class="border-bottom py-3">
+          <div class="d-flex justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+              <img src="<%= avaliacao.cliente.avatar || '/images/avatars/default.svg' %>" class="avatar-navbar" alt="">
+              <strong class="small"><%= avaliacao.cliente.nome %></strong>
+            </div>
+            <span class="small text-muted"><%= new Date(avaliacao.createdAt).toLocaleDateString('pt-BR') %></span>
+          </div>
+          <div class="my-1"><%- include('../partials/estrelas', { nota: avaliacao.nota }) %></div>
+          <p class="mb-0 small"><%= avaliacao.comentario %></p>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+
+  <!-- Relacionados -->
+  <% if (produtosRelacionados.length > 0) { %>
+    <h2 class="h4 fw-bold mt-5 mb-3">Você também pode gostar</h2>
+    <div class="row row-cols-2 row-cols-md-4 g-3">
+      <% produtosRelacionados.forEach(function(produto) { %>
+        <%- include('../partials/produto-card', { produto }) %>
+      <% }); %>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+<script src="/js/carrinho.js"></script>
+<script src="/js/avaliacao.js"></script>
+</body>
+</html>
