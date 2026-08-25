@@ -1,4 +1,4 @@
-use strict';
+'use strict';
 
 // models/Pedido.js
 module.exports = (sequelize, DataTypes) => {
