@@ -1,0 +1,17 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<div class="container py-5 text-center pagina-erro">
+  <div class="display-1 fw-bold text-bazari-primary">500</div>
+  <h1 class="h3 fw-bold mb-2">Ocorreu um erro interno</h1>
+  <p class="text-muted mb-2">Algo deu errado do nosso lado. Tente novamente em instantes.</p>
+  <% if (typeof detalhe !== 'undefined' && detalhe) { %>
+    <p class="small text-muted"><code><%= detalhe %></code></p>
+  <% } %>
+  <a href="/" class="btn btn-bazari-primary"><i class="bi bi-house me-1"></i> Voltar ao início</a>
+</div>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/scripts') %>
+</body>
+</html>
